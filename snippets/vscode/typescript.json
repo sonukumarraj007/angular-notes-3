@@ -1,0 +1,118 @@
+{
+	// Place your snippets for typescript here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	"Print to console": {
+		"prefix": "log",
+		"body": [
+			"console.log('$1');",
+			"$2"
+		],
+		"description": "Log output to console"
+  },
+  
+	"attribute-directive": {
+    "prefix": "ang-attribute-directive",
+    "body": [
+      "import { Directive, ElementRef } from '@angular/core';",
+      "",
+      "@Directive({",
+      "  selector: '[${1:selector-name}]'",
+      "})",
+      "export class HighlightDirective {",
+      "    constructor(el: ElementRef) {",
+      "       el.nativeElement.style.backgroundColor = 'yellow';",
+      "    }",
+      "}"
+    ],
+    "description": "attribute-directive"
+  },
+
+  // forms start
+  "reactive form validator function": {
+    "prefix": "ang-reactive-form-validator",
+    "body": [
+      "import { AbstractControl, NG_VALIDATORS, Validator, ValidatorFn } from '@angular/forms';",
+      "",
+      "export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {",
+      "  return (control: AbstractControl): {[key: string]: any} | null => {",
+      "    const forbidden = nameRe.test(control.value);",
+      "    return forbidden ? {'forbiddenName': {value: control.value}} : null;",
+      "  };",
+      "}",
+      ""
+    ],
+    "description": "reactive form validator function"
+  },
+
+  "add validator function to reactive form": {
+    "prefix": "ang-add-validator-function-to-reactive-form",
+    "body": [
+      "// Adding to reactive forms",
+      "this.heroForm = new FormGroup({",
+      "  name: new FormControl(this.hero.name, [",
+      "    Validators.required,",
+      "    Validators.minLength(4),",
+      "    forbiddenNameValidator(/bob/i) // <-- Here's how you pass in the custom validator.",
+      "  ]),",
+      "  alterEgo: new FormControl(this.hero.alterEgo),",
+      "  power: new FormControl(this.hero.power, Validators.required)",
+      "});",
+      ""
+    ],
+    "description": "add validator function to reactive form"
+  },
+
+  "add validator function to template driven form": {
+    "prefix": "ang-add-validator-function-to-template-driven-form",
+    "body": [
+      "// Adding to template driven form",
+      "@Directive({",
+      "  selector: '[appForbiddenName]',",
+      "  providers: [{provide: NG_VALIDATORS, useExisting: ForbiddenValidatorDirective, multi: true}]",
+      "})",
+      "export class ForbiddenValidatorDirective implements Validator {",
+      "  @Input('appForbiddenName') forbiddenName: string;",
+      "",
+      "  validate(control: AbstractControl): {[key: string]: any} | null {",
+      "    return this.forbiddenName ? forbiddenNameValidator(new RegExp(this.forbiddenName, 'i'))(control)",
+      "                              : null;",
+      "  }",
+      "}"
+    ],
+    "description": "add validator function to template driven form"
+  },
+
+  "add form builder": {
+    "prefix": "ang-add-form-builder",
+    "body": [
+      "import { FormArray, FormBuilder, Validators } from '@angular/forms';",
+      "",
+      "profileForm = this.fb.group({",
+      "    firstName: ['kar', { updateOn: 'blur' }, [Validators.minLength(3), Validators.required]],",
+      "    lastName: [''],",
+      "    address: this.fb.group({",
+      "        street: [''],",
+      "        city: [''],",
+      "        state: [''],",
+      "        zip: ['']",
+      "    }),",
+      "    aliases: this.fb.array([",
+      "        this.fb.control('')",
+      "    ])",
+      "});",
+      "",
+      "get aliases() {",
+      "    return this.profileForm.get('aliases') as FormArray;",
+      "}",
+      "",
+      "addAlias() {",
+      "    this.aliases.push(this.fb.control(''));",
+      "}"
+    ],
+    "description": "add form builder"
+  }
+  // forms end
+}
